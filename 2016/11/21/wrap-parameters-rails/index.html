@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  
+  
+  <title>Wrap parameters in Rails</title>
+  <meta name="description" content="ActionController::ParamsWrapper in Rails is responsible for wrapping the parameters hash into a nested hash.">
+  
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="/2016/11/21/wrap-parameters-rails/">
+  
+  
+  <link rel="alternate" type="application/rss+xml" title="Rohit Patel" href="/feed.xml">
+
+  
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="rohitpatel061">
+  <meta name="twitter:title" content="Wrap parameters in Rails">
+  <meta name="twitter:description" content="ActionController::ParamsWrapper in Rails is responsible for wrapping the parameters hash into a nested hash.">
+  
+    <meta name="twitter:creator" content="rohitpatel061">
+  
+  
+
+  <script type="text/javascript">
+  WebFontConfig = {
+    google: { families: [ 'Bitter:400,700,400italic:latin' ] }
+  };
+  (function(d) {
+    var wf = d.createElement('script'), s = d.scripts[0];
+    wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js';
+    wf.async = true;
+    s.parentNode.insertBefore(wf, s);
+  })(document);
+</script>
+
+  
+
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Rohit Patel</a>
+
+    <nav class="site-nav">
+      
+        
+        <a class="page-link" href="/about/">About</a>
+      
+        
+        <a class="page-link" href="/archives/">Archives</a>
+      
+        
+        <a class="page-link" href="https://github.com/rohitcy">GitHub</a>
+      
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    
+      <h1 class="post-title" itemprop="name headline">Wrap parameters in Rails</h1>
+    
+    <p class="post-meta"><time datetime="2016-11-21T00:00:00+05:30" itemprop="datePublished">Nov 21, 2016</time> •
+  
+    
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        <a href="/categories/til/">TIL</a>
+      
+    
+  
+
+
+ •
+  
+    
+    
+      
+    
+      
+    
+      
+        <a href="/tags/rails/">rails</a>,
+      
+    
+      
+    
+      
+    
+  
+    
+    
+      
+    
+      
+    
+      
+    
+      
+        <a href="/tags/actioncontroller/">actioncontroller</a>
+      
+    
+      
+    
+  
+
+</p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p><code class="highlighter-rouge">ActionController::ParamsWrapper</code> in Rails is responsible for wrapping the parameters hash into a nested hash.</p>
+
+<p>Recently while building a rest api for one of the applications I ran into an strange problem.</p>
+
+<p>While making a <code class="highlighter-rouge">POST</code> request with some JSON params, I observed that the request params were getting duplicated in an unusual manner for eg. when I made following request to a controller named <code class="highlighter-rouge">transactions</code> with following params:</p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="w">  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"amount"</span><span class="p">:</span><span class="w"> </span><span class="mi">10000</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"operator"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vodafone"</span><span class="w">
+  </span><span class="p">}</span></code></pre></figure>
+
+<p>Here’s what I was getting in my controller as request params:</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby">  <span class="p">{</span>
+    <span class="s2">"amount"</span> <span class="o">=&gt;</span> <span class="mi">10000</span><span class="p">,</span>
+    <span class="s2">"operator"</span> <span class="o">=&gt;</span> <span class="s1">'vodafone'</span><span class="p">,</span>
+    <span class="s2">"transactions"</span> <span class="o">=&gt;</span>  <span class="p">{</span>
+      <span class="s2">"amount"</span> <span class="o">=&gt;</span> <span class="mi">10000</span><span class="p">,</span>
+      <span class="s2">"operator"</span> <span class="o">=&gt;</span> <span class="s1">'vodafone'</span><span class="p">,</span>
+    <span class="p">}</span>
+  <span class="p">}</span></code></pre></figure>
+
+<p>As we can see above the same params are getting duplicated, after searching a little while for what could be the reason for this, I got introduced to Rails’s <a href="http://api.rubyonrails.org/classes/ActionController/ParamsWrapper.html">ActionController::ParamsWrapper</a> module.</p>
+
+<p>Well in brief what this module does is that it wraps the parameters hash into a nested hash, which in turn allows us to submit requests without having to specify any root elements. Rails has it because it provides us an advantage as it wraps the parameters in a nested hash using the <code class="highlighter-rouge">controller-name</code> as key by default (we can change this as well). So let’s say if we <code class="highlighter-rouge">enable</code> ParamsWrapper for :json format then we don’t need to send JSON parameters like:</p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="w">  </span><span class="p">{</span><span class="w">
+    </span><span class="err">fruit</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"apple"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"price"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span></code></pre></figure>
+
+<p>instead we can just send them as:</p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="w">  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"apple"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"price"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="w">
+  </span><span class="p">}</span></code></pre></figure>
+
+<p>This functionality is enabled in wrap_parameters initializer of your app(<code class="highlighter-rouge">config/initializers/wrap_parameters.rb</code>) and can be customized. Below is how <code class="highlighter-rouge">wrap_parameters</code> is initialized by default when we create a new Rails app.</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="no">ActiveSupport</span><span class="p">.</span><span class="nf">on_load</span><span class="p">(</span><span class="ss">:action_controller</span><span class="p">)</span> <span class="k">do</span>
+  <span class="n">wrap_parameters</span> <span class="ss">format: </span><span class="p">[</span><span class="ss">:json</span><span class="p">]</span> <span class="k">if</span> <span class="nb">respond_to?</span><span class="p">(</span><span class="ss">:wrap_parameters</span><span class="p">)</span>
+<span class="k">end</span></code></pre></figure>
+
+<p>Rails has params wrapping on by default for <code class="highlighter-rouge">json</code>, but if we don’t want our params to be wrapped we can either remove <code class="highlighter-rouge">json</code> from the  <code class="highlighter-rouge">format</code> array which will turn off params wrapping for the whole application altogether. In case you want to do this for a specific controller, <code class="highlighter-rouge">transactions_controller</code> in our example, it can be done by calling <code class="highlighter-rouge">wrap_parameters false</code> in our controller.</p>
+
+<p>References:</p>
+
+<ul>
+  <li>Customizing ParamsWrapper: <a href="http://api.rubyonrails.org/classes/ActionController/ParamsWrapper.html">ActionController::ParamsWrapper</a></li>
+</ul>
+
+  </div>
+
+  
+    <div class="post-comments" itemprop="comment">
+      <div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://rohitcy-github-io-1.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+    </div>
+  
+
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <p>
+      
+
+&copy;  - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="/feed.xml">RSS</a>
+
+    </p>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

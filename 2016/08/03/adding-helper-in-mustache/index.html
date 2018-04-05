@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  
+  
+  <title>How to add helper in mustache</title>
+  <meta name="description" content="In my previous post I gave an brief overview about mustache and how we can render templates with it.">
+  
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="/2016/08/03/adding-helper-in-mustache/">
+  
+  
+  <link rel="alternate" type="application/rss+xml" title="Rohit Patel" href="/feed.xml">
+
+  
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="rohitpatel061">
+  <meta name="twitter:title" content="How to add helper in mustache">
+  <meta name="twitter:description" content="In my previous post I gave an brief overview about mustache and how we can render templates with it.">
+  
+    <meta name="twitter:creator" content="rohitpatel061">
+  
+  
+
+  <script type="text/javascript">
+  WebFontConfig = {
+    google: { families: [ 'Bitter:400,700,400italic:latin' ] }
+  };
+  (function(d) {
+    var wf = d.createElement('script'), s = d.scripts[0];
+    wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js';
+    wf.async = true;
+    s.parentNode.insertBefore(wf, s);
+  })(document);
+</script>
+
+  
+
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Rohit Patel</a>
+
+    <nav class="site-nav">
+      
+        
+        <a class="page-link" href="/about/">About</a>
+      
+        
+        <a class="page-link" href="/archives/">Archives</a>
+      
+        
+        <a class="page-link" href="https://github.com/rohitcy">GitHub</a>
+      
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    
+      <h1 class="post-title" itemprop="name headline">How to add helper in mustache</h1>
+    
+    <p class="post-meta"><time datetime="2016-08-03T00:00:00+05:30" itemprop="datePublished">Aug 3, 2016</time> •
+  
+    
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        <a href="/categories/til/">TIL</a>
+      
+    
+  
+
+
+ •
+  
+    
+    
+      
+        <a href="/tags/javascript/">javascript</a>,
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  
+    
+    
+      
+    
+      
+        <a href="/tags/mustache/">mustache</a>
+      
+    
+      
+    
+      
+    
+      
+    
+  
+
+</p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>In my previous <a href="http://borgs.cybrilla.com/tils/template-rendering-with-mustache/">post</a> I gave an brief overview about <a href="https://github.com/janl/mustache.js">mustache</a> and how we can render templates with it.</p>
+
+<p>Well one thing that mustache brands about itself is that it is a logicless way of rendering templates, so what if you want to dynamically change or let’s just say format some data while rendering template e.g. you are rendering a table as a template and one of the column is price and let’s say you want to display this price in multiple of thousands (5000 as 5K).</p>
+
+<p>Mustache being logicless you can’t directly do any arithmetic operations in a template, to do so mustache provides something called as <code class="highlighter-rouge">lambdas</code>. According to mustache’s documentation we can pass callable objects(lambda or function) while rendering a template and if the value is a callable object, such as a function or lambda, the object will be invoked and passed the block of text. The text passed is the literal block, unrendered.  will not have been expanded - the lambda should do that on its own. In this way we can implement filters(5000 to 5K) or caching.</p>
+
+<p>Well that’s just a lot of theoritical stuff let’s see how we can put it to acutal use continuing with our example(table as a template), we will pass a function that formats price while rendering the template.</p>
+
+<p>Considering our template as:</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript">  <span class="o">&lt;</span><span class="nx">script</span> <span class="nx">id</span><span class="o">=</span><span class="s2">"price-template"</span> <span class="nx">type</span><span class="o">=</span><span class="s2">"x-tmpl-mustache"</span><span class="o">&gt;</span>
+    <span class="nx">Price</span><span class="p">:</span> <span class="p">{{</span><span class="err">#</span><span class="nx">formatPrice</span><span class="p">}}</span> <span class="p">{{</span><span class="nx">price</span><span class="p">}}</span> <span class="p">{{</span><span class="sr">/formatPrice}</span><span class="err">}
+</span>  <span class="o">&lt;</span><span class="sr">/script&gt;</span></code></pre></figure>
+
+<p>Here <code class="highlighter-rouge">formatPrice</code> is an callable object(a function) which is going to format the price for us we will pass this callable object while rendering template as:</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript">  <span class="kd">var</span> <span class="nx">rendered_price</span> <span class="o">=</span> <span class="nx">Mustache</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="nx">price_template</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">price</span><span class="p">:</span> <span class="nx">price</span><span class="p">[</span><span class="nx">city</span><span class="p">],</span>
+    <span class="na">formatPrice</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">val</span><span class="p">,</span> <span class="nx">render</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="p">(</span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">render</span><span class="p">(</span><span class="nx">val</span><span class="p">))</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">).</span><span class="nx">toString</span><span class="p">()</span> <span class="o">+</span> <span class="s2">"K"</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+  <span class="p">});</span></code></pre></figure>
+
+<p>So that’s how we can use helpers in mustache for implementing filters to see a complete example please refer this <a href="https://jsfiddle.net/eurodo061/aj7175vu/">fiddle</a>.</p>
+
+<h2 id="references">References:</h2>
+
+<ul>
+  <li>Mustache 5 lambda: <a href="https://mustache.github.io/mustache.5.html">https://mustache.github.io/mustache.5.html</a></li>
+</ul>
+
+  </div>
+
+  
+    <div class="post-comments" itemprop="comment">
+      <div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://rohitcy-github-io-1.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+    </div>
+  
+
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <p>
+      
+
+&copy;  - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="/feed.xml">RSS</a>
+
+    </p>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

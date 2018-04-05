@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  
+  
+  <title>Template rendering with mustache</title>
+  <meta name="description" content="In some widgets rich websites we are often faced with a situation where we need to update all the widgets on a page based on change of a particular attribute e.g consider a web page where you can select a city and based on the selected city you have to update four sections lets say hotels, atms, hospitals and parks in the city.">
+  
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="/2016/07/12/template-rendering-with-mustache/">
+  
+  
+  <link rel="alternate" type="application/rss+xml" title="Rohit Patel" href="/feed.xml">
+
+  
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="rohitpatel061">
+  <meta name="twitter:title" content="Template rendering with mustache">
+  <meta name="twitter:description" content="In some widgets rich websites we are often faced with a situation where we need to update all the widgets on a page based on change of a particular attribute e.g consider a web page where you can s...">
+  
+    <meta name="twitter:creator" content="rohitpatel061">
+  
+  
+
+  <script type="text/javascript">
+  WebFontConfig = {
+    google: { families: [ 'Bitter:400,700,400italic:latin' ] }
+  };
+  (function(d) {
+    var wf = d.createElement('script'), s = d.scripts[0];
+    wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js';
+    wf.async = true;
+    s.parentNode.insertBefore(wf, s);
+  })(document);
+</script>
+
+  
+
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Rohit Patel</a>
+
+    <nav class="site-nav">
+      
+        
+        <a class="page-link" href="/about/">About</a>
+      
+        
+        <a class="page-link" href="/archives/">Archives</a>
+      
+        
+        <a class="page-link" href="https://github.com/rohitcy">GitHub</a>
+      
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    
+      <h1 class="post-title" itemprop="name headline">Template rendering with mustache</h1>
+    
+    <p class="post-meta"><time datetime="2016-07-12T00:00:00+05:30" itemprop="datePublished">Jul 12, 2016</time> •
+  
+    
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        <a href="/categories/til/">TIL</a>
+      
+    
+  
+
+
+ •
+  
+    
+    
+      
+        <a href="/tags/javascript/">javascript</a>,
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  
+    
+    
+      
+    
+      
+        <a href="/tags/mustache/">mustache</a>
+      
+    
+      
+    
+      
+    
+      
+    
+  
+
+</p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>In some widgets rich websites we are often faced with a situation where we need to update all the widgets on a page based on change of a particular attribute e.g consider a web page where you can select a city and based on the selected city you have to update four sections lets say hotels, atms, hospitals and parks in the city.</p>
+
+<p>One way to approach it, will be making an ajax call on city change and then updating the four widgets from the response data.</p>
+
+<p>Wouldn’t it be nice if we can avoid this ajax calls and load all the data at once as some key value pair(ofcourse city being the key) and then onchange of city just render the widgets again with the new data.</p>
+
+<p>Well you’re in luck as <a href="https://github.com/janl/mustache.js">Mustache</a> let’s you do just that.</p>
+
+<p>Continuing with our cities and hotel example let’s see how we can approach it through Mustache, suppose that we need to render hotel and park of a selected city,</p>
+
+<p>All you need to do is include a template like:</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript">  <span class="o">&lt;</span><span class="nx">script</span> <span class="nx">id</span><span class="o">=</span><span class="s2">"hotel-template"</span> <span class="nx">type</span><span class="o">=</span><span class="s2">"x-tmpl-mustache"</span><span class="o">&gt;</span>
+      <span class="nx">Hotel</span><span class="p">:</span> 
+  <span class="o">&lt;</span><span class="sr">/script&gt;</span></code></pre></figure>
+
+<p>Now on city change you can render your template using:</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">hotel_template</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">'hotel-template'</span><span class="p">).</span><span class="nx">innerHTML</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">rendered_hotel</span> <span class="o">=</span> <span class="nx">Mustache</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="nx">hotel_template</span><span class="p">,</span> <span class="p">{</span><span class="na">hotel</span><span class="p">:</span> <span class="nx">hotel</span><span class="p">[</span><span class="nx">city</span><span class="p">]});</span></code></pre></figure>
+
+<p>And you can inject the rendered html and update hotel element like:</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">'hotel'</span><span class="p">).</span><span class="nx">innerHTML</span> <span class="o">=</span> <span class="nx">rendered_hotel</span><span class="p">;</span></code></pre></figure>
+
+<p>To see a full-fledged example please refer <a href="https://jsfiddle.net/eurodo061/Lp1ch5vy/">fiddle</a>.</p>
+
+  </div>
+
+  
+    <div class="post-comments" itemprop="comment">
+      <div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://rohitcy-github-io-1.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+    </div>
+  
+
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <p>
+      
+
+&copy;  - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="/feed.xml">RSS</a>
+
+    </p>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>
