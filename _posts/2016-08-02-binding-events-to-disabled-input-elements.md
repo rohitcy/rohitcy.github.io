@@ -1,9 +1,8 @@
 ---
 layout: post
 title:  "Binding mouse events to disabled input elements"
-date:   2016-08-02 16:00:00 +0530
-author: rohit
 tags:   [javascript]
+categories: ["TIL"]
 ---
 Do you know, you can't bind mouse events to a input element once it is disabled?
 

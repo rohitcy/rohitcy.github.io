@@ -1,9 +1,10 @@
 ---
 layout: post
 title:  "Template rendering with mustache"
-date:   2016-07-12 13:00:00 +0530
-author: rohit
-tags:   [javascript, mustache]
+tags:
+  - javascript
+  - mustache
+categories: TIL
 ---
 
 In some widgets rich websites we are often faced with a situation where we need to update all the widgets on a page based on change of a particular attribute e.g consider a web page where you can select a city and based on the selected city you have to update four sections lets say hotels, atms, hospitals and parks in the city.

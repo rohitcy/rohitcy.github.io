@@ -1,9 +1,8 @@
 ---
 layout: post
 title:  "Wrap parameters in Rails"
-date:   2016-11-21 4:00:00 +0530
-author: rohit
 tags:   [rails, actioncontroller]
+categories: ["TIL"]
 ---
 `ActionController::ParamsWrapper` in Rails is responsible for wrapping the parameters hash into a nested hash.
 

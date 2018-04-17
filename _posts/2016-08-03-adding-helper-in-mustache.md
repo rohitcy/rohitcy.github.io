@@ -1,9 +1,8 @@
 ---
 layout: post
 title:  "How to add helper in mustache"
-date:   2016-08-03 4:00:00 +0530
-author: rohit
 tags:   [javascript, mustache]
+categories: ["TIL"]
 ---
 In my previous [post](http://borgs.cybrilla.com/tils/template-rendering-with-mustache/) I gave an brief overview about [mustache](https://github.com/janl/mustache.js) and how we can render templates with it.
 

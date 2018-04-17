@@ -1,9 +1,8 @@
 ---
 layout: post
 title:  "Send POST data without a HTML form"
-date:   2016-07-20 14:30:00 +0530
-author: rohit
 tags:   [javascript]
+categories: ["TIL"]
 ---
 Recently while working on one of the projects I encountered a situation where I had to post some nested-data to a controller method and this data wasn't associated with any model hence rails `fields_for` was of no help.
 
