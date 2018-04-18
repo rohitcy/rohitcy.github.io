@@ -29,14 +29,14 @@ if [ -d "$BUILD_DIR" ]; then
       mv $TMP_DIR/* .
 
       # Commit
-      # git add .
-      # git commit -m "Deploy $(date)"
-      # if git push origin master; then
-      #   echo "DEPLOYED SUCCESSFULLY !"
-      #   echo $(basename $(git remote show -n origin | grep Fetch | cut -d: -f2-))
-      # else
-      #   echo "DEPLOY FAILED !"
-      # fi
+      git add .
+      git commit -m "Deploy $(date)"
+      if git push origin master; then
+        echo "DEPLOYED SUCCESSFULLY !"
+        echo $(basename $(git remote show -n origin | grep Fetch | cut -d: -f2-))
+      else
+        echo "DEPLOY FAILED !"
+      fi
     else
       echo "CANNOT SWITCH BRANCH, ABORTING"
     fi
