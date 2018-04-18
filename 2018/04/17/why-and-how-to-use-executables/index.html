@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  
+  
+  <title>Why Executables? and How to use Executables?</title>
+  <meta name="description" content="Why Executables?">
+  
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="/2018/04/17/why-and-how-to-use-executables/">
+  
+  
+  <link rel="alternate" type="application/rss+xml" title="Rohit Patel" href="/feed.xml">
+
+  
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="rohitpatel061">
+  <meta name="twitter:title" content="Why Executables? and How to use Executables?">
+  <meta name="twitter:description" content="Why Executables?">
+  
+    <meta name="twitter:creator" content="rohitpatel061">
+  
+  
+
+  <script type="text/javascript">
+  WebFontConfig = {
+    google: { families: [ 'Bitter:400,700,400italic:latin' ] }
+  };
+  (function(d) {
+    var wf = d.createElement('script'), s = d.scripts[0];
+    wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js';
+    wf.async = true;
+    s.parentNode.insertBefore(wf, s);
+  })(document);
+</script>
+
+  
+
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Rohit Patel</a>
+
+    <nav class="site-nav">
+      
+        
+        <a class="page-link" href="/about/">About</a>
+      
+        
+        <a class="page-link" href="/archives/">Archives</a>
+      
+        
+        <a class="page-link" href="https://github.com/rohitcy">GitHub</a>
+      
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    
+      <h1 class="post-title" itemprop="name headline">Why Executables? and How to use Executables?</h1>
+    
+    <p class="post-meta"><time datetime="2018-04-17T00:00:00+05:30" itemprop="datePublished">Apr 17, 2018</time> •
+  
+    
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        <a href="/categories/blog/">Blog</a>
+      
+    
+  
+
+
+ •
+  
+    
+    
+      
+    
+      
+    
+      
+        <a href="/tags/rails/">rails</a>,
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  
+    
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        <a href="/tags/ruby/">ruby</a>,
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  
+    
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        <a href="/tags/sidekiq/">sidekiq</a>,
+      
+    
+      
+    
+      
+    
+      
+    
+  
+    
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        <a href="/tags/executables/">executables</a>
+      
+    
+      
+    
+      
+    
+  
+
+</p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <h3 id="why-executables">Why Executables?</h3>
+
+<p>If you have ever worked on a application which depends on lots of third party apis then you might know that most of the apis don’t work as expected.</p>
+
+<p>Such was the case in one of the projects I was working on. It falls under Fintech domain and being a fintech application, it requires a user’s details to be shared with different third parties for compliance and regulatory reasons and this is handelled by lots of background jobs.</p>
+
+<p>Most of the times this background jobs won’t run properly due to various causes
+like some third party is down or sometimes just because life as we know is not so perfect. In order to solve this first we started executing this executables from rails console of our prod server. But this led to more problems like dependency on a particular team member since everybody doesn’t have production access, and as the number of job failures increased it became time consuming as well. In order to solve this new problem we came up with a quick solution, we started exposing this jobs on our application’s admin panel so that our operations team can run them as per need, it worked in short run as a quick fix.</p>
+
+<p>But as we know quick fixes are not always good in a long run and leads to more problems. It happens so we ended up adding multiple routes and controller actions whenever we needed a new executable to be exposed on our admin panel. This became a problem which demanded proper solution and so it happens I came across sidekiq’s web module which is nothing but a Rack app which can be mounted with your rails application and it facilitates job monitoring. This led me to a question that if I can monitor jobs via a web interface why can’t I execute them as well via a web interface, and thus I created executables.</p>
+
+<h3 id="how-to-use-executables">How to use Executables?</h3>
+
+<p>Using executables is as easy and simple like any other gem. In order to get started with executables you can follow the Getting Started guide <a href="https://github.com/rohitcy/executables#getting-started">here</a>. Once you are done with the setup mentioned in getting started guide you can access your executables by navigating to the mounted url like as follows.</p>
+
+<p><br /></p>
+
+<p><img src="/assets/images/executables-dashboard.png" alt="Executable Dashboard" /></p>
+
+<p><br /></p>
+
+<p>As mentioned in the screenshot in order to execute a particular executable you can click on it and you will be redirected to a screen like following, here you will be able to see the executable methods available and arguments it takes, you can provide respective arguments and click on execute and you’re all set.</p>
+
+<p><br /></p>
+
+<p><img src="/assets/images/executables-execute.png" alt="Executable execute page" /></p>
+
+<p><br /></p>
+
+<p>That’s all their to executables as of now, feel free to shoot out any questions/doubts you’ve in the comments below and as always you can create a new issue <a href="https://github.com/rohitcy/executables/issues">here</a> if you’re facing any problems with executables.</p>
+
+
+  </div>
+
+  
+    <div class="post-comments" itemprop="comment">
+      <div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://rohitcy-github-io-1.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+    </div>
+  
+
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <p>
+      
+
+&copy;  - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="/feed.xml">RSS</a>
+
+    </p>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

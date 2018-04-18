@@ -5,7 +5,7 @@
   
   <link href="/feed.xml" rel="self" type="application/atom+xml" />
   <link href="/" rel="alternate" type="text/html" />
-  <updated>2018-04-17T15:32:05+05:30</updated>
+  <updated>2018-04-18T13:15:17+05:30</updated>
   <id>//</id>
 
   
@@ -18,6 +18,79 @@
 
   
 
+  
+  
+    <entry>
+      
+      <title type="html">Why Executables? and How to use Executables?</title>
+      
+      
+      <link href="/2018/04/17/why-and-how-to-use-executables/" rel="alternate" type="text/html" title="Why Executables? and How to use Executables?" />
+      
+      <published>2018-04-17T00:00:00+05:30</published>
+      <updated>2018-04-17T00:00:00+05:30</updated>
+      <id>/2018/04/17/why-and-how-to-use-executables</id>
+      <content type="html" xml:base="/2018/04/17/why-and-how-to-use-executables/">&lt;h3 id=&quot;why-executables&quot;&gt;Why Executables?&lt;/h3&gt;
+
+&lt;p&gt;If you have ever worked on a application which depends on lots of third party apis then you might know that most of the apis don’t work as expected.&lt;/p&gt;
+
+&lt;p&gt;Such was the case in one of the projects I was working on. It falls under Fintech domain and being a fintech application, it requires a user’s details to be shared with different third parties for compliance and regulatory reasons and this is handelled by lots of background jobs.&lt;/p&gt;
+
+&lt;p&gt;Most of the times this background jobs won’t run properly due to various causes
+like some third party is down or sometimes just because life as we know is not so perfect. In order to solve this first we started executing this executables from rails console of our prod server. But this led to more problems like dependency on a particular team member since everybody doesn’t have production access, and as the number of job failures increased it became time consuming as well. In order to solve this new problem we came up with a quick solution, we started exposing this jobs on our application’s admin panel so that our operations team can run them as per need, it worked in short run as a quick fix.&lt;/p&gt;
+
+&lt;p&gt;But as we know quick fixes are not always good in a long run and leads to more problems. It happens so we ended up adding multiple routes and controller actions whenever we needed a new executable to be exposed on our admin panel. This became a problem which demanded proper solution and so it happens I came across sidekiq’s web module which is nothing but a Rack app which can be mounted with your rails application and it facilitates job monitoring. This led me to a question that if I can monitor jobs via a web interface why can’t I execute them as well via a web interface, and thus I created executables.&lt;/p&gt;
+
+&lt;h3 id=&quot;how-to-use-executables&quot;&gt;How to use Executables?&lt;/h3&gt;
+
+&lt;p&gt;Using executables is as easy and simple like any other gem. In order to get started with executables you can follow the Getting Started guide &lt;a href=&quot;https://github.com/rohitcy/executables#getting-started&quot;&gt;here&lt;/a&gt;. Once you are done with the setup mentioned in getting started guide you can access your executables by navigating to the mounted url like as follows.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/executables-dashboard.png&quot; alt=&quot;Executable Dashboard&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;As mentioned in the screenshot in order to execute a particular executable you can click on it and you will be redirected to a screen like following, here you will be able to see the executable methods available and arguments it takes, you can provide respective arguments and click on execute and you’re all set.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/executables-execute.png&quot; alt=&quot;Executable execute page&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;That’s all their to executables as of now, feel free to shoot out any questions/doubts you’ve in the comments below and as always you can create a new issue &lt;a href=&quot;https://github.com/rohitcy/executables/issues&quot;&gt;here&lt;/a&gt; if you’re facing any problems with executables.&lt;/p&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+
+      
+        <category term="Blog" />
+      
+
+      
+        <category term="rails" />
+      
+        <category term="ruby" />
+      
+        <category term="sidekiq" />
+      
+        <category term="executables" />
+      
+
+      
+        <summary type="html">Why Executables?</summary>
+      
+
+      
+      
+    </entry>
+  
   
   
     <entry>
