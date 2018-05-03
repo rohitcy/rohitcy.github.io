@@ -7,14 +7,15 @@ categories: ["Blog"]
 
 ### Why Executables?
 
-If you have ever worked on a application which depends on lots of third party apis then you might know that most of the apis don't work as expected.
+Executables is built to solve following problems:
 
-Such was the case in one of the projects I was working on. It falls under Fintech domain and being a fintech application, it requires a user's details to be shared with different third parties for compliance and regulatory reasons and this is handelled by lots of background jobs.
+1) Do you often login to your prod server to manually execute some code?
 
-Most of the times this background jobs won't run properly due to various causes
-like some third party is down or sometimes just because life as we know is not so perfect. In order to solve this first we started executing this executables from rails console of our prod server. But this led to more problems like dependency on a particular team member since everybody doesn't have production access, and as the number of job failures increased it became time consuming as well. In order to solve this new problem we came up with a quick solution, we started exposing this jobs on our application's admin panel so that our operations team can run them as per need, it worked in short run as a quick fix.
+2) Do you have dependency on a particular dev(the one with PROD access) in your team to get things done?
 
-But as we know quick fixes are not always good in a long run and leads to more problems. It happens so we ended up adding multiple routes and controller actions whenever we needed a new executable to be exposed on our admin panel. This became a problem which demanded proper solution and so it happens I came across sidekiq's web module which is nothing but a Rack app which can be mounted with your rails application and it facilitates job monitoring. This led me to a question that if I can monitor jobs via a web interface why can't I execute them as well via a web interface, and thus I created executables.
+3) Do you hate writing redundant code just to make an POC to be executable via a web interface?
+
+If you face above problems then executables might be the solution for you, with the help of executables you can expose your jobs/workers/anything that accepts JSON datatypes (numbers, strings, boolean, array, hash) and can execute them via a web interface keep reading to know how you can achieve this.
 
 ### How to use Executables?
 
@@ -27,7 +28,7 @@ Using executables is as easy and simple like any other gem. In order to get star
 <br>
 
 
-As mentioned in the screenshot in order to execute a particular executable you can click on it and you will be redirected to a screen like following, here you will be able to see the executable methods available and arguments it takes, you can provide respective arguments and click on execute and you're all set.
+As mentioned in the screenshot in order to execute a particular executable you can click on it and you will be redirected to a screen like following, here you will be able to see the executable methods available and arguments it takes, you can provide respective arguments and as per your need you can run the executable inline or async.
 
 <br>
 
